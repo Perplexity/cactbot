@@ -36,8 +36,21 @@ export type Regression = 'local' | 'remote';
 export type TetherColor = 'blue' | 'green';
 export type TrioDebuff = 'near' | 'distant';
 
+export type Role = 'T1' | 'T2' | 'H1' | 'H2' | 'M1' | 'M2' | 'R1' | 'R2';
+
 export interface Data extends RaidbossData {
-  readonly triggerSetConfig: { staffSwordDodge: 'mid' | 'far' };
+  readonly triggerSetConfig: {
+    staffSwordDodge: 'mid' | 'far';
+    roleT1: string;
+    roleT2: string;
+    roleH1: string;
+    roleH2: string;
+    roleM1: string;
+    roleM2: string;
+    roleR1: string;
+    roleR2: string;
+  };
+  roleToPlayer: { [role in Role]: string };
   combatantData: PluginCombatantState[];
   phase: Phase;
   decOffset?: number;
@@ -47,6 +60,7 @@ export interface Data extends RaidbossData {
   solarRayTargets: string[];
   glitch?: Glitch;
   synergyMarker: { [name: string]: PlaystationMarker };
+  synergyPositions: { [name: string]: { side: 'west' | 'east'; position: number } };
   spotlightStacks: string[];
   meteorTargets: string[];
   cannonFodder: { [name: string]: Cannon };
@@ -58,6 +72,7 @@ export interface Data extends RaidbossData {
   latentDefectCount: number;
   patchVulnCount: number;
   waveCannonStacks: NetMatches['Ability'][];
+  waveCannonSide?: 'east' | 'west';
   monitorPlayers: NetMatches['GainsEffect'][];
   deltaTethers: { [name: string]: TetherColor };
   trioDebuff: { [name: string]: TrioDebuff };
@@ -226,10 +241,68 @@ const triggerSet: TriggerSet<Data> = {
       },
       default: 'far',
     },
+    {
+      id: 'roleT1',
+      name: { en: 'Party: T1 (Tank 1)' },
+      type: 'string',
+      default: 'Eureka',
+    },
+    {
+      id: 'roleT2',
+      name: { en: 'Party: T2 (Tank 2)' },
+      type: 'string',
+      default: 'Elaine',
+    },
+    {
+      id: 'roleH1',
+      name: { en: 'Party: H1 (Healer 1)' },
+      type: 'string',
+      default: 'Candeela',
+    },
+    {
+      id: 'roleH2',
+      name: { en: 'Party: H2 (Healer 2)' },
+      type: 'string',
+      default: 'Nops',
+    },
+    {
+      id: 'roleM1',
+      name: { en: 'Party: M1 (Melee 1)' },
+      type: 'string',
+      default: 'Rougito',
+    },
+    {
+      id: 'roleM2',
+      name: { en: 'Party: M2 (Melee 2)' },
+      type: 'string',
+      default: 'Bitter',
+    },
+    {
+      id: 'roleR1',
+      name: { en: 'Party: R1 (Ranged 1)' },
+      type: 'string',
+      default: 'Baliha',
+    },
+    {
+      id: 'roleR2',
+      name: { en: 'Party: R2 (Ranged 2)' },
+      type: 'string',
+      default: 'C\'ranmaia',
+    },
   ],
   timelineFile: 'the_omega_protocol.txt',
   initData: () => {
     return {
+      roleToPlayer: {
+        T1: '',
+        T2: '',
+        H1: '',
+        H2: '',
+        M1: '',
+        M2: '',
+        R1: '',
+        R2: '',
+      },
       combatantData: [],
       phase: 'p1',
       inLine: {},
@@ -237,6 +310,7 @@ const triggerSet: TriggerSet<Data> = {
       pantoMissileCount: 0,
       solarRayTargets: [],
       synergyMarker: {},
+      synergyPositions: {},
       spotlightStacks: [],
       meteorTargets: [],
       cannonFodder: {},
@@ -247,6 +321,7 @@ const triggerSet: TriggerSet<Data> = {
       latentDefectCount: 0,
       patchVulnCount: 0,
       waveCannonStacks: [],
+      waveCannonSide: undefined,
       monitorPlayers: [],
       deltaTethers: {},
       trioDebuff: {},
@@ -291,6 +366,23 @@ const triggerSet: TriggerSet<Data> = {
     },
   ],
   triggers: [
+    {
+      id: 'TOP Party Role Setup',
+      type: 'StartsUsing',
+      netRegex: { id: '7B03', source: 'Omega', capture: false },
+      run: (data) => {
+        data.roleToPlayer = {
+          T1: data.triggerSetConfig.roleT1,
+          T2: data.triggerSetConfig.roleT2,
+          H1: data.triggerSetConfig.roleH1,
+          H2: data.triggerSetConfig.roleH2,
+          M1: data.triggerSetConfig.roleM1,
+          M2: data.triggerSetConfig.roleM2,
+          R1: data.triggerSetConfig.roleR1,
+          R2: data.triggerSetConfig.roleR2,
+        };
+      },
+    },
     {
       id: 'TOP Phase Tracker',
       type: 'StartsUsing',
@@ -760,81 +852,190 @@ const triggerSet: TriggerSet<Data> = {
       durationSeconds: 14,
       suppressSeconds: 10,
       infoText: (data, _matches, output) => {
-        const glitch = data.glitch
-          ? {
-            mid: output.midGlitch!(),
-            remote: output.remoteGlitch!(),
-          }[data.glitch]
-          : output.unknown!();
-
         const myMarker = data.synergyMarker[data.me];
         // If something has gone awry, at least return something here.
         if (myMarker === undefined)
-          return glitch;
+          return data.glitch ?? output.unknown!();
 
-        let partner = output.unknown!();
-        for (const [name, marker] of Object.entries(data.synergyMarker)) {
-          if (marker === myMarker && name !== data.me) {
-            partner = name;
+        // Role-based swap partner configuration
+        const roleSwapPartners: { [role in Role]: Role[] } = {
+          T1: [],
+          H1: ['T1'],
+          M1: ['H1', 'T1'],
+          R1: ['M1', 'H1', 'T1'],
+          T2: [],
+          H2: ['T2'],
+          M2: ['H2', 'T2'],
+          R2: ['M2', 'H2', 'T2'],
+        };
+
+        // Position mapping: Cross=1, Square=2, Circle=3, Triangle=4
+        const positionMap: { [key: string]: number } = {
+          cross: 1,
+          square: 2,
+          circle: 3,
+          triangle: 4,
+        };
+
+        const position = positionMap[myMarker] ?? 0;
+        const reversedPosition = 5 - position; // Reversed for east side with far glitch
+
+        // Determine player's role
+        let myRole: Role | undefined;
+        for (const [role, playerName] of Object.entries(data.roleToPlayer)) {
+          if (data.me.startsWith(playerName)) {
+            myRole = role as Role;
             break;
           }
         }
 
-        return {
-          circle: output.circle!({ glitch: glitch, player: data.party.member(partner) }),
-          triangle: output.triangle!({ glitch: glitch, player: data.party.member(partner) }),
-          square: output.square!({ glitch: glitch, player: data.party.member(partner) }),
-          cross: output.cross!({ glitch: glitch, player: data.party.member(partner) }),
-        }[myMarker];
+        // Determine side and swap logic
+        let isWestSide = false;
+        if (myRole !== undefined) {
+          // West side roles: T1, H1, M1, R1
+          isWestSide = ['T1', 'H1', 'M1', 'R1'].includes(myRole);
+
+          // Check if we need to swap
+          const swapPartnerRoles = roleSwapPartners[myRole];
+          let shouldSwap = false;
+          for (const partnerRole of swapPartnerRoles) {
+            const partnerName = data.roleToPlayer[partnerRole];
+            // Match partner names by prefix (in case they have last names)
+            for (const [fullName, marker] of Object.entries(data.synergyMarker)) {
+              if (fullName.startsWith(partnerName) && marker === myMarker) {
+                shouldSwap = true;
+                break;
+              }
+            }
+            if (shouldSwap)
+              break;
+          }
+
+          // If we need to swap, flip the side
+          if (shouldSwap)
+            isWestSide = !isWestSide;
+        }
+
+        const glitch = data.glitch === 'mid' ? output.mid!() : output.far!();
+        const direction = isWestSide ? output.west!() : output.east!();
+
+        // West side: always use default position
+        // East side: use default for mid glitch, reversed for far glitch
+        const shouldReverse = !isWestSide && data.glitch === 'remote';
+        const pos = shouldReverse ? reversedPosition : position;
+
+        return output.position!({
+          glitch: glitch,
+          direction: direction,
+          position: pos,
+          marker: myMarker.toUpperCase(),
+        });
+      },
+      run: (data) => {
+        // Store positions for all players to use in Spotlight mechanic
+        const roleSwapPartners: { [role in Role]: Role[] } = {
+          T1: [],
+          H1: ['T1'],
+          M1: ['H1', 'T1'],
+          R1: ['M1', 'H1', 'T1'],
+          T2: [],
+          H2: ['T2'],
+          M2: ['H2', 'T2'],
+          R2: ['M2', 'H2', 'T2'],
+        };
+
+        const positionMap: { [key: string]: number } = {
+          cross: 1,
+          square: 2,
+          circle: 3,
+          triangle: 4,
+        };
+
+        for (const [playerName, marker] of Object.entries(data.synergyMarker)) {
+          const position = positionMap[marker] ?? 0;
+          const reversedPosition = 5 - position;
+
+          // Determine player's role
+          let playerRole: Role | undefined;
+          for (const [role, configName] of Object.entries(data.roleToPlayer)) {
+            if (playerName.startsWith(configName)) {
+              playerRole = role as Role;
+              break;
+            }
+          }
+
+          let isWestSide = false;
+          if (playerRole !== undefined) {
+            // West side roles: T1, H1, M1, R1
+            isWestSide = ['T1', 'H1', 'M1', 'R1'].includes(playerRole);
+
+            // Check if we need to swap
+            const swapPartnerRoles = roleSwapPartners[playerRole];
+            let shouldSwap = false;
+            for (const partnerRole of swapPartnerRoles) {
+              const partnerName = data.roleToPlayer[partnerRole];
+              for (const [fullName, otherMarker] of Object.entries(data.synergyMarker)) {
+                if (fullName.startsWith(partnerName) && otherMarker === marker) {
+                  shouldSwap = true;
+                  break;
+                }
+              }
+              if (shouldSwap)
+                break;
+            }
+            if (shouldSwap)
+              isWestSide = !isWestSide;
+          }
+
+          const shouldReverse = !isWestSide && data.glitch === 'remote';
+          const finalPosition = shouldReverse ? reversedPosition : position;
+
+          data.synergyPositions[playerName] = {
+            side: isWestSide ? 'west' : 'east',
+            position: finalPosition,
+          };
+        }
       },
       outputStrings: {
-        midGlitch: {
-          en: 'Mid',
-          de: 'Mittel',
-          fr: 'Milieu',
+        position: {
+          en: '${glitch} | ${direction} | POSITION ${position} | ${marker}',
+          de: '${glitch} | ${direction} | POSITION ${position} | ${marker}',
+          fr: '${glitch} | ${direction} | POSITION ${position} | ${marker}',
+          ja: '${glitch} | ${direction} | ${position}番 | ${marker}',
+          cn: '${glitch} | ${direction} | ${position}号位 | ${marker}',
+          ko: '${glitch} | ${direction} | ${position}번 | ${marker}',
+        },
+        mid: {
+          en: 'MID',
+          de: 'MITTEL',
+          fr: 'MILIEU',
           ja: 'ミドル',
           cn: '中',
           ko: '가까이',
         },
-        remoteGlitch: {
-          en: 'Far',
-          de: 'Fern',
-          fr: 'Loin',
+        far: {
+          en: 'FAR',
+          de: 'FERN',
+          fr: 'LOIN',
           ja: 'ファー',
           cn: '远',
           ko: '멀리',
         },
-        circle: {
-          en: '${glitch} Circle (with ${player})',
-          de: '${glitch} Kreis (mit ${player})',
-          fr: 'Cercle ${glitch} (avec ${player})',
-          ja: '${glitch} 円 (${player})',
-          cn: '${glitch} 圆圈 (与${player})',
-          ko: '${glitch} 동그라미 (+ ${player})',
+        west: {
+          en: 'WEST',
+          de: 'WEST',
+          fr: 'OUEST',
+          ja: '西',
+          cn: '西',
+          ko: '서쪽',
         },
-        triangle: {
-          en: '${glitch} Triangle (with ${player})',
-          de: '${glitch} Dreieck (mit ${player})',
-          fr: 'Triangle ${glitch} (avec ${player})',
-          ja: '${glitch} 三角 (${player})',
-          cn: '${glitch} 三角 (与${player})',
-          ko: '${glitch} 삼각 (+ ${player})',
-        },
-        square: {
-          en: '${glitch} Square (with ${player})',
-          de: '${glitch} Viereck (mit ${player})',
-          fr: 'Carré ${glitch} (avec ${player})',
-          ja: '${glitch} 四角 (${player})',
-          cn: '${glitch} 方块 (与${player})',
-          ko: '${glitch} 사각 (+ ${player})',
-        },
-        cross: {
-          en: '${glitch} Cross (with ${player})',
-          de: '${glitch} Kreuz (mit ${player})',
-          fr: 'X ${glitch} (avec ${player})',
-          ja: '${glitch} バツ (${player})',
-          cn: '${glitch} X (与${player})',
-          ko: '${glitch} X (+ ${player})',
+        east: {
+          en: 'EAST',
+          de: 'OST',
+          fr: 'EST',
+          ja: '東',
+          cn: '东',
+          ko: '동쪽',
         },
         unknown: Outputs.unknown,
       },
@@ -888,34 +1089,30 @@ const triggerSet: TriggerSet<Data> = {
       response: (data, matches, output) => {
         // cactbot-builtin-response
         output.responseOutputStrings = {
-          midGlitch: {
-            en: 'Mid',
-            de: 'Mittel',
-            fr: 'Milieu',
-            ja: 'ミドル',
-            cn: '中',
-            ko: '가까이',
+          swap: {
+            en: 'Swap: ${swap}',
+            de: 'Wechsel: ${swap}',
+            fr: 'Échange: ${swap}',
+            ja: 'スワップ: ${swap}',
+            cn: '交换: ${swap}',
+            ko: '스왑: ${swap}',
           },
-          remoteGlitch: {
-            en: 'Far',
-            de: 'Fern',
-            fr: 'Loin',
-            ja: 'ファー',
-            cn: '远',
-            ko: '멀리',
+          noSwap: {
+            en: 'No Swaps',
+            de: 'Kein Wechsel',
+            fr: 'Pas d\'échange',
+            ja: 'スワップなし',
+            cn: '不交换',
+            ko: '스왑 없음',
           },
-          stacksOn: {
-            en: '${glitch} Stacks (${player1}, ${player2})',
-            de: '${glitch} Sammeln (${player1}, ${player2})',
-            fr: 'Package ${glitch} (${player1}, ${player2})',
-            ja: '${glitch} 頭割り (${player1}, ${player2})',
-            cn: '${glitch} 分摊 (${player1}, ${player2})',
-            ko: '${glitch} 쉐어 (${player1}, ${player2})',
+          you: {
+            en: 'YOU',
+            de: 'DU',
+            fr: 'VOUS',
+            ja: '自分',
+            cn: '你',
+            ko: '당신',
           },
-          // TODO: say who your tether partner is to swap??
-          // TODO: tell the tether partner they are tethered to a stack?
-          stackOnYou: Outputs.stackOnYou,
-          unknown: Outputs.unknown,
         };
 
         data.spotlightStacks.push(matches.target);
@@ -923,24 +1120,53 @@ const triggerSet: TriggerSet<Data> = {
         if (data.spotlightStacks.length !== 2 || p1 === undefined || p2 === undefined)
           return;
 
-        const glitch = data.glitch
-          ? {
-            mid: output.midGlitch!(),
-            remote: output.remoteGlitch!(),
-          }[data.glitch]
-          : output.unknown!();
+        // Determine which players need to swap
+        const swapPlayers: string[] = [];
 
-        const stacksOn = output.stacksOn!({
-          glitch: glitch,
-          player1: data.party.member(p1),
-          player2: data.party.member(p2),
-        });
-        if (!data.spotlightStacks.includes(data.me))
-          return { infoText: stacksOn };
-        return {
-          alertText: output.stackOnYou!(),
-          infoText: stacksOn,
-        };
+        for (const stackPlayer of data.spotlightStacks) {
+          const stackPosition = data.synergyPositions[stackPlayer];
+          if (stackPosition === undefined)
+            continue;
+
+          // Check if this stack player has someone on their side with lower position who also has stack
+          let needsSwap = false;
+          for (const otherStackPlayer of data.spotlightStacks) {
+            if (otherStackPlayer === stackPlayer)
+              continue;
+            const otherPosition = data.synergyPositions[otherStackPlayer];
+            if (
+              otherPosition !== undefined &&
+              otherPosition.side === stackPosition.side &&
+              otherPosition.position < stackPosition.position
+            ) {
+              needsSwap = true;
+              break;
+            }
+          }
+
+          if (needsSwap) {
+            // This stack player needs to swap, so add them and their tethered partner
+            swapPlayers.push(stackPlayer);
+            // Find their tethered partner
+            const stackMarker = data.synergyMarker[stackPlayer];
+            for (const [name, marker] of Object.entries(data.synergyMarker)) {
+              if (name !== stackPlayer && marker === stackMarker) {
+                swapPlayers.push(name);
+                break;
+              }
+            }
+          }
+        }
+
+        if (swapPlayers.length === 0) {
+          return { infoText: output.noSwap!() };
+        }
+
+        // Convert to short party names and join, replacing player's own name with "YOU"
+        const swapNames = swapPlayers.map((name) =>
+          name === data.me ? output.you!() : data.party.member(name)
+        ).join(', ');
+        return { infoText: output.swap!({ swap: swapNames }) };
       },
     },
     {
@@ -1431,6 +1657,7 @@ const triggerSet: TriggerSet<Data> = {
       id: 'TOP Oversampled Wave Cannon East',
       type: 'StartsUsing',
       netRegex: { id: '7B6B', source: 'Omega', capture: false },
+      preRun: (data) => data.waveCannonSide = 'east',
       alertText: (_data, _matches, output) => output.text!(),
       outputStrings: {
         text: {
@@ -1447,6 +1674,7 @@ const triggerSet: TriggerSet<Data> = {
       id: 'TOP Oversampled Wave Cannon West',
       type: 'StartsUsing',
       netRegex: { id: '7B6C', source: 'Omega', capture: false },
+      preRun: (data) => data.waveCannonSide = 'west',
       alertText: (_data, _matches, output) => output.text!(),
       outputStrings: {
         text: {
@@ -1466,40 +1694,213 @@ const triggerSet: TriggerSet<Data> = {
       // D7D = Oversampled Wave Cannon Loading (facing left)
       netRegex: { effectId: ['D7C', 'D7D'] },
       preRun: (data, matches) => data.monitorPlayers.push(matches),
+      // Delay to wait for the East/West StartsUsing trigger to set data.waveCannonSide
+      delaySeconds: 0.5,
       response: (data, _matches, output) => {
         // cactbot-builtin-response
         output.responseOutputStrings = {
-          // TODO: should we get all of these player's positions,
-          // assuming there's a N/S conga line?
           monitorOnYou: {
-            en: 'Monitor (w/${player1}, ${player2})',
-            de: 'Bildschirm (w/${player1}, ${player2})',
-            fr: 'Moniteur (avec ${player1}, ${player2})',
-            ja: '検知 (${player1}, ${player2})',
-            cn: '小电视点名 (与${player1}, ${player2})',
-            ko: '모니터 (+ ${player1}, ${player2})',
+            en: 'Monitor ${num}: ${position} - ${direction}',
+            de: 'Bildschirm ${num}: ${position} - ${direction}',
+            fr: 'Moniteur ${num} : ${position} - ${direction}',
+            ja: '検知 ${num}: ${position} - ${direction}',
+            cn: '小电视点名 ${num}: ${position} - ${direction}',
+            ko: '모니터 ${num}: ${position} - ${direction}',
+          },
+          pointSide: {
+            en: 'Point Side',
+            de: 'Zur Seite zeigen',
+            fr: 'Pointer côté',
+            ja: '横に向ける',
+            cn: '指向侧面',
+            ko: '옆으로 향하기',
+          },
+          pointUp: {
+            en: 'Point Up',
+            de: 'Nach oben zeigen',
+            fr: 'Pointer haut',
+            ja: '上に向ける',
+            cn: '指向上',
+            ko: '위로 향하기',
+          },
+          pointDown: {
+            en: 'Point Down',
+            de: 'Nach unten zeigen',
+            fr: 'Pointer bas',
+            ja: '下に向ける',
+            cn: '指向下',
+            ko: '아래로 향하기',
           },
           unmarked: {
-            en: 'Unmarked',
-            de: 'Unmarkiert',
-            fr: 'Sans marque',
-            ja: '無職',
-            cn: '无点名',
-            ko: '무징',
+            en: 'Nothing ${num}: ${position}',
+            de: 'Nichts ${num}: ${position}',
+            fr: 'Rien ${num} : ${position}',
+            ja: '無職 ${num}: ${position}',
+            cn: '无点名 ${num}: ${position}',
+            ko: '무징 ${num}: ${position}',
+          },
+          sideEast: {
+            en: 'East',
+            de: 'Ost',
+            fr: 'Est',
+            ja: '東',
+            cn: '东',
+            ko: '동',
+          },
+          sideWest: {
+            en: 'West',
+            de: 'West',
+            fr: 'Ouest',
+            ja: '西',
+            cn: '西',
+            ko: '서',
+          },
+          sideUnknown: {
+            en: 'Unknown',
+            de: 'Unbekannt',
+            fr: 'Inconnu',
+            ja: '不明',
+            cn: '未知',
+            ko: '알 수 없음',
+          },
+          unknownPosition: {
+            en: 'Unknown Position',
+            de: 'Unbekannte Position',
+            fr: 'Position inconnue',
+            ja: '位置不明',
+            cn: '未知位置',
+            ko: '위치 미확인',
           },
         };
 
         if (data.monitorPlayers.length !== 3)
           return;
 
-        const players = data.monitorPlayers.map((x) => x.target).sort();
+        // Party priority order: H1, H2, T1, T2, M1, M2, R1, R2
+        const rolePriorityMap: { [role in Role]: number } = {
+          H1: 0,
+          H2: 1,
+          T1: 2,
+          T2: 3,
+          M1: 4,
+          M2: 5,
+          R1: 6,
+          R2: 7,
+        };
+
+        // Helper function to get a player's role
+        // Config names are first names only, so we check if the player name contains/starts with the config name
+        const getPlayerRole = (playerName: string): Role | undefined => {
+          for (const [role, configName] of Object.entries(data.roleToPlayer)) {
+            // Skip empty config names
+            if (!configName)
+              continue;
+            // Check if player name starts with config name (first name)
+            if (playerName.startsWith(configName)) {
+              return role as Role;
+            }
+          }
+          return undefined;
+        };
+
+        // Get all party member names
+        const allPlayers = data.party.partyNames;
+        const monitorPlayerNames = data.monitorPlayers.map((x) => x.target);
+        const nonMonitorPlayers = allPlayers.filter((name) => !monitorPlayerNames.includes(name));
+
+        // Sort monitor players by priority
+        const sortedMonitorPlayers = monitorPlayerNames.sort((a, b) => {
+          const roleA = getPlayerRole(a);
+          const roleB = getPlayerRole(b);
+          if (roleA === undefined || roleB === undefined)
+            return 0;
+          return rolePriorityMap[roleA] - rolePriorityMap[roleB];
+        });
+
+        // Sort non-monitor players by priority
+        const sortedNonMonitorPlayers = nonMonitorPlayers.sort((a, b) => {
+          const roleA = getPlayerRole(a);
+          const roleB = getPlayerRole(b);
+          if (roleA === undefined || roleB === undefined)
+            return 0;
+          return rolePriorityMap[roleA] - rolePriorityMap[roleB];
+        });
+
         data.monitorPlayers = [];
 
-        if (players.includes(data.me)) {
-          const [p1, p2] = players.filter((x) => x !== data.me).map((x) => data.party.member(x));
-          return { alertText: output.monitorOnYou!({ player1: p1, player2: p2 }) };
+        const side = data.waveCannonSide;
+        const sideLabel = side === 'east'
+          ? output.sideEast!()
+          : side === 'west'
+          ? output.sideWest!()
+          : output.sideUnknown!();
+
+        const nothingPositions: Record<'east' | 'west', { [num: number]: string }> = {
+          east: {
+            1: 'A',
+            2: 'North of D',
+            3: 'South of D',
+            4: 'Next to 3',
+            5: 'C',
+          },
+          west: {
+            1: 'A',
+            2: 'North of B',
+            3: 'South of B',
+            4: 'Next to 2',
+            5: 'C',
+          },
+        };
+
+        const monitorPositions: Record<'east' | 'west', { [num: number]: string }> = {
+          east: {
+            1: 'North of 4',
+            2: 'Below 1',
+            3: 'Above 2',
+          },
+          west: {
+            1: 'North of 2',
+            2: 'Below 4',
+            3: 'Above 3',
+          },
+        };
+
+        // Monitor 1: Point side, Monitor 2: Point up, Monitor 3: Point down
+        const monitorDirections: { [num: number]: string } = {
+          1: output.pointSide!(),
+          2: output.pointUp!(),
+          3: output.pointDown!(),
+        };
+
+        // Determine which number the current player is
+        if (monitorPlayerNames.includes(data.me)) {
+          const monitorNumber = sortedMonitorPlayers.indexOf(data.me) + 1;
+          const position = side !== undefined
+            ? monitorPositions[side][monitorNumber]
+            : undefined;
+          const positionLabel = position ?? output.unknownPosition!();
+          const direction = monitorDirections[monitorNumber] ?? '';
+          return {
+            alertText: output.monitorOnYou!({
+              num: monitorNumber,
+              position: positionLabel,
+              side: sideLabel,
+              direction: direction,
+            }),
+          };
         }
-        return { infoText: output.unmarked!() };
+        const nothingNumber = sortedNonMonitorPlayers.indexOf(data.me) + 1;
+        const position = side !== undefined
+          ? nothingPositions[side][nothingNumber]
+          : undefined;
+        const positionLabel = position ?? output.unknownPosition!();
+        return {
+          infoText: output.unmarked!({
+            num: nothingNumber,
+            position: positionLabel,
+            side: sideLabel,
+          }),
+        };
       },
     },
     {
@@ -1574,7 +1975,7 @@ const triggerSet: TriggerSet<Data> = {
       },
       outputStrings: {
         farTether: {
-          en: 'Blue Tether',
+          en: 'Blue Tether -> West',
           de: 'Blaue Verbindung',
           fr: 'Lien Bleu',
           ja: '青線',
@@ -1582,7 +1983,7 @@ const triggerSet: TriggerSet<Data> = {
           ko: '파란색 선',
         },
         nearTether: {
-          en: 'Green Tether',
+          en: 'Green Tether -> East',
           de: 'Grüne Verbindung',
           fr: 'Lien Vert',
           ja: '緑線',
@@ -1627,12 +2028,47 @@ const triggerSet: TriggerSet<Data> = {
       id: 'TOP P5 Trio Debuff Collector',
       type: 'GainsEffect',
       netRegex: { effectId: ['D72', 'D73'] },
-      run: (data, matches) => {
+      condition: (data) => data.phase === 'delta',
+      preRun: (data, matches) => {
         // This is cleaned up on phase change.
         if (matches.effectId === 'D72')
           data.trioDebuff[matches.target] = 'near';
         if (matches.effectId === 'D73')
           data.trioDebuff[matches.target] = 'distant';
+      },
+      suppressSeconds: 5,
+      infoText: (data, _matches, output) => {
+        const myColor = data.deltaTethers[data.me];
+        if (myColor === undefined)
+          return;
+
+        const myDebuff = data.trioDebuff[data.me];
+
+        if (myColor === 'blue') {
+          if (myDebuff === 'distant')
+            return output.blueDistant!();
+          if (myDebuff === 'near')
+            return output.blueNear!();
+          // No debuff
+          return output.blueNoDebuff!();
+        }
+
+        // Green tether
+        return output.green!();
+      },
+      outputStrings: {
+        blueNoDebuff: {
+          en: 'Stack SE/SW Marker AWAY from Omega',
+        },
+        blueDistant: {
+          en: 'Go South',
+        },
+        blueNear: {
+          en: 'Mid, Close To Cleave',
+        },
+        green: {
+          en: 'Inner: Snap, stand N&S of SE/SW marker CLOSE to Omega || Outer: Stretch, late snap',
+        },
       },
     },
     {
@@ -1646,31 +2082,38 @@ const triggerSet: TriggerSet<Data> = {
       response: (data, _matches, output) => {
         // cactbot-builtin-response
         output.responseOutputStrings = {
-          ...nearDistantOutputStrings,
-          unmarkedBlue: {
-            // Probably near baits, but you never know.
-            en: 'Unmarked Blue',
-            de: 'Blau ohne Debuff',
-            fr: 'Bleu sans debuff',
-            ja: 'デバフなしの青線',
-            cn: '无点名蓝',
-            ko: '디버프 없는 파란색 선',
+          blueNoDebuff: {
+            en: 'Stack SE/SW Marker AWAY from Omega',
+          },
+          blueDistant: {
+            en: 'Go South',
+          },
+          blueNear: {
+            en: 'Mid, Close To Cleave',
+          },
+          green: {
+            en:
+              'Inner: Snap, stand N&S of SE/SW marker CLOSE to Omega || Outer: Stretch, late snap',
           },
         };
-
-        const myDebuff = data.trioDebuff[data.me];
-        if (myDebuff === 'near')
-          return { alertText: output.near!() };
-        if (myDebuff === 'distant')
-          return { alertText: output.distant!() };
 
         const myColor = data.deltaTethers[data.me];
         if (myColor === undefined)
           return;
 
-        // TODO: should we call anything out for greens here??
-        if (myColor === 'blue')
-          return { infoText: output.unmarkedBlue!() };
+        const myDebuff = data.trioDebuff[data.me];
+
+        if (myColor === 'blue') {
+          if (myDebuff === 'distant')
+            return { alertText: output.blueDistant!() };
+          if (myDebuff === 'near')
+            return { alertText: output.blueNear!() };
+          // No debuff
+          return { alertText: output.blueNoDebuff!() };
+        }
+
+        // Green tether
+        return { alertText: output.green!() };
       },
     },
     {
