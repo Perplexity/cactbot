@@ -24,6 +24,9 @@ const triggerSet: TriggerSet<Data> = {
   ],
   zoneLabel: {
     en: 'Pilgrim\'s Traverse (All Stones)',
+    de: 'Pilgers Pfad (Alle Steine)',
+    cn: '朝圣交错路 (全朝圣路)',
+    ko: '노르브란트 순례길 (전 구간)',
   },
 
   triggers: [
@@ -36,6 +39,7 @@ const triggerSet: TriggerSet<Data> = {
       // TODO: some Mimics may spawn after transference between floors and get called early before being found
       type: 'AddedCombatant',
       netRegex: { npcNameId: ['14264', '14265', '14266'], capture: false },
+      suppressSeconds: 1,
       infoText: (_data, _matches, output) => output.text!(),
       outputStrings: {
         text: {
@@ -219,18 +223,21 @@ const triggerSet: TriggerSet<Data> = {
           de: 'Hast',
           fr: 'Hâte',
           ja: 'ヘイスト',
+          cn: '加速',
         },
         purification: {
           en: 'Purification',
           de: 'Reinigung',
           fr: 'Purification',
           ja: '浄化の守り',
+          cn: '净化护符',
         },
         devotion: {
           en: 'Devotion',
           de: 'Weisung',
           fr: 'Dévotion',
           ja: '巡礼の導き',
+          cn: '朝圣的指引',
         },
         unknown: Outputs.unknown,
       },
@@ -281,18 +288,21 @@ const triggerSet: TriggerSet<Data> = {
           de: 'Wandelwurz',
           fr: 'Sagacité',
           ja: '明敏',
+          cn: '敏慧',
         },
         barkbalm: {
           en: 'Barkbalm',
           de: 'Sakralharz',
           fr: 'Quiétude',
           ja: '安寧',
+          cn: '安宁',
         },
         poisonfruit: {
           en: 'Poisonfruit',
           de: 'Todesbeeren',
           fr: 'Fatalité',
           ja: '宿命',
+          cn: '宿命',
         },
         unknown: Outputs.unknown,
       },
