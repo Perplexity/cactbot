@@ -171,6 +171,7 @@ const stayGoOutputStrings: OutputStrings = {
     ja: 'そのまま跳ばない',
     cn: '留在当前平台',
     ko: '그대로',
+    tc: '留在當前平台',
   },
   goAcross: {
     en: 'Go Across',
@@ -179,6 +180,7 @@ const stayGoOutputStrings: OutputStrings = {
     ja: '反対側へ跳ぶ',
     cn: '去对侧',
     ko: '건너가기',
+    tc: '去對側',
   },
 };
 
@@ -215,6 +217,7 @@ const triggerSet: TriggerSet<Data> = {
         ja: 'ピット・オブ・ヴォロク：安地優先順位',
         cn: '无敌裂斩安全区优先级',
         ko: '볼로크의 함정 안전지대 우선순위',
+        tc: '無敵裂斬安全區優先度',
       },
       comment: {
         en: 'Select which safe spots have priority during callouts.',
@@ -223,6 +226,7 @@ const triggerSet: TriggerSet<Data> = {
         ja: 'コール時に優先する安地の位置を選択します。',
         cn: '选择播报安全区的优先级',
         ko: '안전지대 중 호출 우선순위가 높은 곳을 선택하세요.',
+        tc: '選擇播報安全區的優先度',
       },
       type: 'select',
       options: {
@@ -327,6 +331,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '前方 + ボスの右側',
           cn: '前方 + BOSS 右侧',
           ko: '앞 + 보스 오른쪽',
+          tc: '前方 + BOSS 右側',
         },
         ...stayGoOutputStrings,
         frontRightKnockaround: {
@@ -336,6 +341,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '前方 + ボスの右側 (${stayGo})',
           cn: '前方 + BOSS 右侧 (${stayGo})',
           ko: '앞 + 보스 오른쪽 (${stayGo})',
+          tc: '前方 + BOSS 右側 (${stayGo})',
         },
       },
     },
@@ -359,6 +365,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '前方 + ボスの左側',
           cn: '前方 + BOSS 左侧',
           ko: '앞 + 보스 왼쪽',
+          tc: '前方 + BOSS 左側',
         },
         ...stayGoOutputStrings,
         frontLeftKnockaround: {
@@ -368,6 +375,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '前方 + ボスの左側 (${stayGo})',
           cn: '前方 + BOSS 左侧 (${stayGo})',
           ko: '앞 + 보스 왼쪽 (${stayGo})',
+          tc: '前方 + BOSS 左側 (${stayGo})',
         },
       },
     },
@@ -391,6 +399,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '後方 + ボスの左側',
           cn: '后方 + BOSS 左侧',
           ko: '뒤 + 보스 왼쪽',
+          tc: '後方 + BOSS 左側',
         },
         ...stayGoOutputStrings,
         backRightKnockaround: {
@@ -400,6 +409,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '後方 + ボスの左側 (${stayGo})',
           cn: '后方 + BOSS 左侧 (${stayGo})',
           ko: '뒤 + 보스 왼쪽 (${stayGo})',
+          tc: '後方 + BOSS 左側 (${stayGo})',
         },
       },
     },
@@ -423,6 +433,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '後方 + ボスの右側',
           cn: '后方 + BOSS 右侧',
           ko: '뒤 + 보스 오른쪽',
+          tc: '後方 + BOSS 右側',
         },
         ...stayGoOutputStrings,
         backLeftKnockaround: {
@@ -432,6 +443,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '後方 + ボスの右側 (${stayGo})',
           cn: '后方 + BOSS 右侧 (${stayGo})',
           ko: '뒤 + 보스 오른쪽 (${stayGo})',
+          tc: '後方 + BOSS 右側 (${stayGo})',
         },
       },
     },
@@ -566,6 +578,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '内側 西の床へ',
           cn: '内侧 左地板',
           ko: '안 왼쪽 칸',
+          tc: '內側 左地板',
         },
         insideEast: {
           en: 'Inner East Diamond',
@@ -574,6 +587,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '内側 東の床へ',
           cn: '内侧 右地板',
           ko: '안 오른쪽 칸',
+          tc: '內側 右地板',
         },
         insideNS: {
           en: 'Inner North/South Diamonds - ${lean}',
@@ -582,6 +596,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '内側 南/北の床へ - ${lean}',
           cn: '内侧 上/下地板 - ${lean}',
           ko: '안 남/북쪽 칸 - ${lean}',
+          tc: '內側 上/下地板 - ${lean}',
         },
         insideN: {
           en: 'Inner North Diamond - ${lean}',
@@ -590,6 +605,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '内側 北の床へ - ${lean}',
           cn: '内侧 上地板 - ${lean}',
           ko: '안 북쪽 칸 - ${lean}',
+          tc: '內側 上地板 - ${lean}',
         },
         insideS: {
           en: 'Inner South Diamond - ${lean}',
@@ -598,6 +614,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '内側 南の床へ - ${lean}',
           cn: '内侧 下地板 - ${lean}',
           ko: '안 남쪽 칸 - ${lean}',
+          tc: '內側 下地板 - ${lean}',
         },
         cornerNS: {
           en: 'North/South Corner Diamonds - ${lean}',
@@ -606,6 +623,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '北/南の隅の床へ - ${lean}',
           cn: '上/下角地板 - ${lean}',
           ko: '남/북쪽 구석 칸 - ${lean}',
+          tc: '上/下角地板 - ${lean}',
         },
         cornerN: {
           en: 'North Corner Diamond - ${lean}',
@@ -614,6 +632,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '北の隅の床へ - ${lean}',
           cn: '上角落地板 - ${lean}',
           ko: '북쪽 구석 칸 - ${lean}',
+          tc: '上角落地板 - ${lean}',
         },
         cornerS: {
           en: 'South Corner Diamond - ${lean}',
@@ -622,6 +641,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '南の隅の床へ - ${lean}',
           cn: '下角落地板 - ${lean}',
           ko: '남쪽 구석 칸 - ${lean}',
+          tc: '下角落地板 - ${lean}',
         },
         leanWest: {
           en: 'Lean West',
@@ -630,6 +650,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '西寄り',
           cn: '偏左',
           ko: '왼쪽',
+          tc: '偏左',
         },
         leanEast: {
           en: 'Lean East',
@@ -638,6 +659,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '東寄り',
           cn: '偏右',
           ko: '오른쪽',
+          tc: '偏右',
         },
         intercardsEast: {
           en: 'Outer Intercard Diamonds - East',
@@ -646,6 +668,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '外側 斜めの床 - 東',
           cn: '外侧 斜边地板 - 右',
           ko: '바깥 구석 칸 - 동쪽',
+          tc: '外側 斜邊地板 - 右',
         },
         intercardsWest: {
           en: 'Outer Intercard Diamonds - West',
@@ -654,6 +677,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '外側 斜めの床 - 西',
           cn: '外侧 斜边地板 - 左',
           ko: '바깥 구석 칸 - 서쪽',
+          tc: '外側 斜邊地板 - 左',
         },
       },
     },
@@ -876,6 +900,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '<= 左内側 (ボス正面)',
           cn: '<= 左内侧 (面向BOSS)',
           ko: '<= 안 왼쪽 (보스를 바라보며)',
+          tc: '<= 左內側 (面向BOSS)',
         },
         leanRight: {
           en: 'Inside Right (Facing Boss) =>',
@@ -884,6 +909,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '右内側 (ボス正面) =>',
           cn: '右内侧 (面向BOSS) =>',
           ko: '안 오른쪽 (보스를 바라보며) =>',
+          tc: '右內側 (面向BOSS) =>',
         },
         corner: {
           en: 'Corners Safe',
@@ -892,6 +918,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '隅が安地',
           cn: '四角安全',
           ko: '구석 안전',
+          tc: '四角安全',
         },
         northwest: Outputs.northwest,
         northeast: Outputs.northeast,
@@ -904,6 +931,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '離れて',
           cn: '远离',
           ko: '멀어지기',
+          tc: '遠離',
         },
         wind: Outputs.knockback,
         fireWindSafe: {
@@ -913,6 +941,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '${fireWind} ${safeDir}',
           cn: '${fireWind}, ${safeDir}',
           ko: '${fireWind} ${safeDir}',
+          tc: '${fireWind}, ${safeDir}',
         },
         combo: {
           en: '${fireWindCombo} + ${tile}',
@@ -921,6 +950,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '${fireWindCombo} + ${tile}',
           cn: '${fireWindCombo} + ${tile}',
           ko: '${fireWindCombo} + ${tile}',
+          tc: '${fireWindCombo} + ${tile}',
         },
         unknown: {
           en: 'Avoid Swords',
@@ -929,6 +959,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '剣を避けて',
           cn: '躲开剑',
           ko: '칼 피하기',
+          tc: '躲開劍',
         },
       },
     },
@@ -965,6 +996,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: 'ペア頭割り（自分が対象）',
           cn: '与同伴分摊 (原地分摊)',
           ko: '파트너 쉐어 (대상자)',
+          tc: '與同伴分攤 (原地分攤)',
         },
         enumKnockback: {
           en: 'Partner stack (knockback)',
@@ -973,6 +1005,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: 'ペア頭割り（跳ばされる）',
           cn: '与同伴分摊 (被击飞)',
           ko: '파트너 쉐어 (넉백)',
+          tc: '與同伴分攤 (被擊飛)',
         },
       },
     },
@@ -1098,6 +1131,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '安地で散開',
           cn: '安全场地散开',
           ko: '안전한 구역 + 산개',
+          tc: '安全場地散開',
         },
         left: {
           en: '<= Front Left Quadrant + Spread Out',
@@ -1106,6 +1140,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '<= 前方左の床へ + 散開',
           cn: '<= 左前半场 + 散开',
           ko: '<= 앞 왼쪽 칸 + 산개',
+          tc: '<= 左前半場 + 散開',
         },
         right: {
           en: 'Front Right Quadrant + Spread Out =>',
@@ -1114,6 +1149,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '前方右の床へ + 散開 =>',
           cn: '右前半场 + 散开 =>',
           ko: '앞 오른쪽 칸 + 산개 =>',
+          tc: '右前半場 + 散開 =>',
         },
       },
     },
@@ -1167,6 +1203,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '${breakChains} (${stayGo})',
           cn: '${breakChains} (${stayGo})',
           ko: '${breakChains} (${stayGo})',
+          tc: '${breakChains} (${stayGo})',
         },
       },
     },
@@ -1200,6 +1237,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: 'ボスの左側',
           cn: 'BOSS左侧',
           ko: '보스 왼쪽',
+          tc: 'BOSS左側',
         },
         right: {
           en: 'Boss\'s Right',
@@ -1208,6 +1246,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: 'ボスの右側',
           cn: 'BOSS右侧',
           ko: '보스 오른쪽',
+          tc: 'BOSS右側',
         },
         in: Outputs.in,
         out: Outputs.out,
@@ -1218,6 +1257,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '${inOut} + ${side}',
           cn: '${inOut} + ${side}',
           ko: '${inOut} + ${side}',
+          tc: '${inOut} + ${side}',
         },
       },
     },
@@ -1239,6 +1279,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: 'ボスの左側',
           cn: 'BOSS左侧',
           ko: '보스 왼쪽',
+          tc: 'BOSS左側',
         },
       },
     },
@@ -1256,6 +1297,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: 'ボスの右側',
           cn: 'BOSS右侧',
           ko: '보스 오른쪽',
+          tc: 'BOSS右側',
         },
       },
     },
@@ -1320,6 +1362,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '内側が安地',
           cn: '内侧安全',
           ko: '안쪽 안전',
+          tc: '內側安全',
         },
         eastWest: {
           en: 'Inside East/West Safe',
@@ -1328,6 +1371,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '内側 東/西が安地',
           cn: '内侧 左/右安全',
           ko: '안쪽 동/서 안전',
+          tc: '內側 左/右安全',
         },
         insideNS: {
           en: 'Inside North/South Safe',
@@ -1336,6 +1380,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '内側 北/南が安地',
           cn: '内侧 上/下安全',
           ko: '안쪽 북/남 안전',
+          tc: '內側 上/下安全',
         },
         insideN: {
           en: 'Inside North Safe',
@@ -1344,6 +1389,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '内側 北が安地',
           cn: '内侧 上安全',
           ko: '안쪽 북 안전',
+          tc: '內側 上安全',
         },
         insideS: {
           en: 'Inside South Safe',
@@ -1352,6 +1398,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '内側 南が安地',
           cn: '内侧 下安全',
           ko: '안쪽 남 안전',
+          tc: '內側 下安全',
         },
         cornerNS: {
           en: 'North/South Corners Safe',
@@ -1360,6 +1407,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '北/南の隅が安地',
           cn: '上/下角落安全',
           ko: '남/북쪽 구석 안전',
+          tc: '上/下角落安全',
         },
         cornerN: {
           en: 'North Corner Safe',
@@ -1368,6 +1416,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '北の隅が安地',
           cn: '上角落安全',
           ko: '북쪽 구석 안전',
+          tc: '上角落安全',
         },
         cornerS: {
           en: 'South Corner Safe',
@@ -1376,6 +1425,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '南の隅が安地',
           cn: '下角落安全',
           ko: '남쪽 구석 안전',
+          tc: '下角落安全',
         },
         intercard: {
           en: 'Outside Intercards Safe (Avoid Corners)',
@@ -1384,6 +1434,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '外側 斜めが安地（隅に注意）',
           cn: '外侧 斜边安全 (角落危险)',
           ko: '바깥쪽 사선 안전 (구석 피하기)',
+          tc: '外側 斜邊安全 (角落危險)',
         },
       },
     },
@@ -1547,6 +1598,46 @@ const triggerSet: TriggerSet<Data> = {
         'Sync(?![-h])': '同步',
         '(?<! )Vollok': '无敌刃',
         'Walls Of Vollok': '无敌之圆',
+      },
+    },
+    {
+      'locale': 'tc',
+      'missingTranslations': true,
+      'replaceSync': {
+        'Fang': '雙牙劍',
+        'Zoraal Ja': '佐拉加',
+      },
+      'replaceText': {
+        // '\\(cast\\)': '', // FIXME '(咏唱)'
+        // '\\(damage\\)': '', // FIXME '(伤害)'
+        // '\\(enrage\\)': '', // FIXME '(狂暴)'
+        // '\\(lines drop\\)': '', // FIXME '(放置直线)'
+        'Actualize': '自我實現',
+        'Aero III': '大勁風',
+        'Backward Edge': '後向斬',
+        'Bitter Whirlwind': '憤恨之風',
+        'Blade Warp': '利刃召喚',
+        'Burning Chains': '火焰鏈',
+        'Chasm Of Vollok': '無敵裂斬',
+        'Dawn Of An Age': '新曦世紀',
+        'Drum Of Vollok': '無敵之擊',
+        'Duty\'s Edge': '責任之刃',
+        'Fiery Edge': '烈火刃',
+        'Forged Track': '利刃衝',
+        'Forward Edge': '前向斬',
+        'Greater Gateway': '附魔通路',
+        'Half Circuit': '迴旋半身殘',
+        'Half Full': '半身殘',
+        'Might Of Vollok': '無敵之力',
+        'Multidirectional Divide': '多向斬',
+        'Projection Of Triumph': '情感投射：利刃',
+        'Projection Of Turmoil': '情感投射：爆發',
+        'Regicidal Rage': '弒君之怒行',
+        'Siege Of Vollok': '無敵之環',
+        'Stormy Edge': '暴風刃',
+        'Sync(?![-h])': '同步',
+        '(?<! )Vollok': '無敵刃',
+        'Walls Of Vollok': '無敵之圓',
       },
     },
     {

@@ -12,6 +12,7 @@ UserConfig.registerOptions('general', {
         ja: 'Cactbot ユーザーディレクトリ',
         cn: 'Cactbot user目录',
         ko: 'Cactbot 사용자 디렉토리',
+        tc: 'Cactbot user目錄',
       },
       type: 'directory',
       default: '',
@@ -25,6 +26,7 @@ UserConfig.registerOptions('general', {
         ja: '開発者向けオプション',
         cn: '显示开发者选项',
         ko: '개발자 옵션 표시',
+        tc: '顯示開發者選項',
       },
       type: 'checkbox',
       default: false,
@@ -38,6 +40,7 @@ UserConfig.registerOptions('general', {
         ja: '表示言語',
         cn: '显示语言',
         ko: '주 사용 언어',
+        tc: '顯示語言',
       },
       type: 'select',
       options: {
