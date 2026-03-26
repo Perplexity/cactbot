@@ -1493,10 +1493,7 @@ const triggerSet: TriggerSet<Data> = {
       id: 'R8S Quake III',
       type: 'StartsUsing',
       netRegex: { id: 'A45A', source: 'Howling Blade', capture: false },
-      alertText: (_data, _matches, output) => output.healerGroups!(),
-      outputStrings: {
-        healerGroups: Outputs.healerGroups,
-      },
+      response: Responses.healerGroups('alert'),
     },
     {
       // headmarkers with casts:
@@ -1646,7 +1643,7 @@ const triggerSet: TriggerSet<Data> = {
 
         switch (matches.id) {
           case 'A45F':
-            data.herosBlowSafeDir = Math.abs(Directions.hdgTo16DirNum(actor.Heading) - 4) % 16;
+            data.herosBlowSafeDir = ((Directions.hdgTo16DirNum(actor.Heading) - 4) + 16) % 16;
             break;
           case 'A461':
             data.herosBlowSafeDir = (Directions.hdgTo16DirNum(actor.Heading) + 4) % 16;

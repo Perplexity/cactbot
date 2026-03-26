@@ -138,6 +138,14 @@ const triggerSet: TriggerSet<Data> = {
              탱커 빨강 및 초록 거울이 있는 위치에 맞춰 조정합니다.
              탱커 한 명은 파티 사이에, 다른 한 명은 초록 거울에 가장 가까운 곳에 위치해야 합니다.
              초록 거울이 발동하면 탱커는 빨강 거울에 맞춰 위치를 조정합니다.`,
+        tc: `此選項可讓 cactbot 提示第四次鏡中奇遇的雙擊退。
+             會在 Boss 轉身期間或之後播報提示, 需要小於 1.4 秒
+             的反應時間來同時躲避綠鏡和紅鏡擊退。
+             示例: https://clips.twitch.tv/CreativeDreamyAsparagusKlappa
+             人群在 Boss 瞬移後分成兩組, 分別站在 Boss 身後。
+             坦克根據紅鏡和綠鏡的位置進行調整。
+             一個坦克必須在分組中間，另一個坦克最靠近綠鏡。
+             綠鏡消失後，坦克調整到紅鏡位置。`,
       },
       type: 'checkbox',
       default: (options) => {
@@ -254,7 +262,7 @@ const triggerSet: TriggerSet<Data> = {
           fr: '(sous le boss => sous les miroirs bientôt',
           cn: '(BOSS 下方 => 即将去镜子下方)',
           ko: '(보스 밑 => 이후 거울 밑)',
-          tc: '(BOSS 下方 => 即將去鏡子下方)',
+          tc: '(Boss 下方 => 即將去鏡子下方)',
         },
         axeNext: {
           en: '(out => middle soon)',
@@ -298,7 +306,7 @@ const triggerSet: TriggerSet<Data> = {
           fr: 'Derrière => SO',
           cn: '后 => 左下',
           ko: '뒤 => 남서',
-          tc: '後 => 左下',
+          tc: '後 => 西南',
         },
         redMirrorEast: {
           en: 'Behind => SE',
@@ -306,7 +314,7 @@ const triggerSet: TriggerSet<Data> = {
           fr: 'Derrière => SE',
           cn: '后 => 右下',
           ko: '뒤 => 남동',
-          tc: '後 => 右下',
+          tc: '後 => 東南',
         },
         getBehind: Outputs.getBehind,
       },
@@ -330,7 +338,7 @@ const triggerSet: TriggerSet<Data> = {
           fr: 'Devant => NO',
           cn: '前 => 左上',
           ko: '앞 => 북서',
-          tc: '前 => 左上',
+          tc: '前 => 西北',
         },
         redMirrorWest: {
           en: 'Front => NE',
@@ -338,7 +346,7 @@ const triggerSet: TriggerSet<Data> = {
           fr: 'Devant => NE',
           cn: '前 => 右上',
           ko: '앞 => 북동',
-          tc: '前 => 右上',
+          tc: '前 => 東北',
         },
         goFront: Outputs.goFront,
       },
@@ -418,7 +426,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '次はフロストスラスト', // FIXME
           cn: '即将冰霜刺 (拉面对人群)',
           ko: '서리 일격 (앞으로)',
-          tc: '即將冰霜刺 (拉麵對人群)',
+          tc: '即將冰霜刺 (拉面對人群)',
         },
       },
     },
@@ -495,7 +503,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '南 / 北',
           cn: '上/下站位',
           ko: '남 / 북',
-          tc: '上/下站位',
+          tc: '北/南站位',
         },
         eastWest: {
           en: 'East / West',
@@ -504,7 +512,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '東 / 西',
           cn: '左/右站位',
           ko: '동 / 서',
-          tc: '左/右站位',
+          tc: '東/西站位',
         },
       },
     },
@@ -531,7 +539,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '南 / 北',
           cn: '上/下站位',
           ko: '남 / 북',
-          tc: '上/下站位',
+          tc: '北/南站位',
         },
         eastWest: {
           en: 'East / West',
@@ -540,7 +548,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '東 / 西',
           cn: '左/右站位',
           ko: '동 / 서',
-          tc: '左/右站位',
+          tc: '東/西站位',
         },
       },
     },
@@ -611,7 +619,7 @@ const triggerSet: TriggerSet<Data> = {
           fr: 'Sous le boss => Sous les miroirs',
           cn: 'BOSS 脚下 => 镜下方',
           ko: '보스 밑 => 거울 밑',
-          tc: 'BOSS 腳下 => 鏡下方',
+          tc: 'Boss 腳下 => 鏡下方',
         },
         getUnder: Outputs.getUnder,
       },
@@ -745,7 +753,7 @@ const triggerSet: TriggerSet<Data> = {
           fr: 'Étourdissez l\'ether aqueux',
           cn: '眩晕水以太',
           ko: '물 에테르 기절',
-          tc: '眩暈水以太',
+          tc: '眩暈水乙太',
         },
       },
     },
@@ -860,6 +868,9 @@ const triggerSet: TriggerSet<Data> = {
         ko: `빠름은 첫 번째 안전 지점에서 세 번째 안전 지점으로 바로 이동할 수 있음을 의미합니다.
              느림은 2번을 건너뛰지 않고 1번 => 2번 => 3번으로 이동해야 한다는 뜻입니다.
              많이 움직이고 싶지 않은 캐스터를 위한 옵션입니다.`,
+        tc: `“快”指你可以直接從第 1 個安全點穿到第 3 個安全點。
+             “慢”指你需要走 1 => 2 => 3, 不能跳過 2。
+             適用於不想移動太多的讀條職業。`,
       },
       type: 'StartsUsing',
       netRegex: { source: 'Shiva', id: ['4D75', '4D76'] },
@@ -1547,7 +1558,6 @@ const triggerSet: TriggerSet<Data> = {
     },
     {
       'locale': 'tc',
-      'missingTranslations': true,
       'replaceSync': {
         'Earthen Aether': '土乙太',
         'Frozen Mirror': '冰面鏡',
@@ -1559,9 +1569,9 @@ const triggerSet: TriggerSet<Data> = {
       'replaceText': {
         'Absolute Zero': '絕對零度',
         'Mirror, Mirror': '鏡中奇遇',
-        // 'Biting/Driving Frost': '', // FIXME '冰霜斩/刺'
-        // 'Reflected Frost \\(G\\)': '', // FIXME '连锁反斩(绿)'
-        // 'Reflected Frost \\(R\\)': '', // FIXME '连锁反斩(红)'
+        'Biting/Driving Frost': '冰霜斬/刺',
+        'Reflected Frost \\(G\\)': '連鎖反斬(綠)',
+        'Reflected Frost \\(R\\)': '連鎖反斬(紅)',
         'Diamond Frost': '鑽石星塵',
         'Frigid Stone': '冰石',
         'Icicle Impact': '冰柱衝擊',
@@ -1569,15 +1579,15 @@ const triggerSet: TriggerSet<Data> = {
         'Frigid Needle': '冰針',
         'Frigid Water': '冰霜',
         'Frigid Eruption': '極冰噴發',
-        // 'Driving/Biting Frost': '', // FIXME '冰霜刺/斩'
+        'Driving/Biting Frost': '冰霜刺/斬',
         'Double Slap': '雙劍斬',
         'Shining Armor': '閃光護甲',
-        // 'Axe/Scythe Kick': '', // FIXME '阔斧/镰形回旋踢'
+        'Axe/Scythe Kick': '闊斧/鐮形迴旋踢',
         'Light Rampant': '光之失控',
         'Bright Hunger': '侵蝕光',
         'The Path Of Light': '光之波動',
-        // 'Scythe/Axe Kick': '', // FIXME '镰形/阔斧回旋踢'
-        // 'Reflected Kick \\(G\\)': '', // FIXME '连锁反踢(绿)'
+        'Scythe/Axe Kick': '鐮形/闊斧迴旋踢',
+        'Reflected Kick \\(G\\)': '連鎖反踢(綠)',
         'Banish III': '強放逐',
         'Shattered World': '世界分斷',
         'Heart Asunder': '心碎',
@@ -1586,28 +1596,28 @@ const triggerSet: TriggerSet<Data> = {
         'Akh Morn': '死亡輪迴',
         'Morn Afah': '無盡頓悟',
         'Hallowed Wings': '神聖之翼',
-        // 'Reflected Wings \\(B\\)': '', // FIXME '连锁反翼(蓝)'
-        // 'Reflected Wings \\(G\\)': '', // FIXME '连锁反翼(绿)'
-        // 'Reflected Wings \\(R\\)': '', // FIXME '连锁反翼(红)'
+        'Reflected Wings \\(B\\)': '連鎖反翼(藍)',
+        'Reflected Wings \\(G\\)': '連鎖反翼(綠)',
+        'Reflected Wings \\(R\\)': '連鎖反翼(紅)',
         'Wyrm\'s Lament': '聖龍咆哮',
         '(?<! )Frost Armor': '冰霜護甲',
-        // 'Twin Silence/Stillness': '', // FIXME '闲寂/静寂的双剑技'
-        // 'Twin Stillness/Silence': '', // FIXME '静寂/闲寂的双剑技'
+        'Twin Silence/Stillness': '閒寂/寂靜的雙劍技',
+        'Twin Stillness/Silence': '寂靜/閒寂的雙劍技',
         'Drachen Armor': '聖龍護甲',
         'Akh Rhai': '天光輪迴',
-        // 'Reflected Armor \\(B\\)': '', // FIXME '连锁反甲(蓝)'
-        // 'Reflected Armor \\(G\\)': '', // FIXME '连锁反甲(绿)'
-        // 'Reflected Armor \\(R\\)': '', // FIXME '连锁反甲(红)'
+        'Reflected Armor \\(B\\)': '連鎖反甲(藍)',
+        'Reflected Armor \\(G\\)': '連鎖反甲(綠)',
+        'Reflected Armor \\(R\\)': '連鎖反甲(紅)',
         'Holy': '神聖',
-        // 'Embittered/Spiteful Dance': '', // FIXME '严峻/冷峻之舞'
-        // 'Spiteful/Embittered Dance': '', // FIXME '冷峻/严峻之舞'
+        'Embittered/Spiteful Dance': '嚴峻/冷峻之舞',
+        'Spiteful/Embittered Dance': '冷峻/嚴峻之舞',
         'Reflected Drachen': '連鎖反射：聖龍護甲',
         'Icelit Dragonsong': '冰與光的龍詩',
         'Draconic Strike': '聖龍一擊',
         'Banish(?! )': '放逐',
         'Inescapable Illumination': '曝露光',
         'The House Of Light': '光之海嘯',
-        // 'Reflected Frost Armor \\(R\\)': '', // FIXME '连锁反冰甲(红)'
+        'Reflected Frost Armor \\(R\\)': '連鎖反冰甲(紅)',
       },
     },
     {

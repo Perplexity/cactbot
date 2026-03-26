@@ -246,7 +246,7 @@ There is a complete example that uses the **timeline** property in [test.ts](../
 Key:value pairs to search and replace in timeline ability names. The display name for that ability is changed, but all `hideall`, `infotext`, `alerttext`, `alarmtext`, etc all refer to the original name. This enables translation/localization of the timeline files without having to edit those files directly.
 
 **replaceSync**
-Key:value pairs to search and replace in timeline file sync expressions. Necessary if localized names differ in the sync regexes.
+Key:value pairs to search and replace in timeline file sync expressions, and trigger sources. Necessary if localized names differ in the sync regexes.
 
 **resetWhenOutOfCombat**
 Boolean, defaults to true.
@@ -867,10 +867,7 @@ so that timelines and triggers will work in French:
        type: 'StartsUsing',
 -      netRegex: { id: '816D', source: 'Kokytos', capture: false },
 +      netRegex: { id: '816D', source: 'Cocyte', capture: false },
-       alertText: (_data, _matches, output) => output.healerGroups!(),
-       outputStrings: {
-         healerGroups: Outputs.healerGroups,
-       },
+       response: Responses.healerGroups('alert'),
      },
 ```
 

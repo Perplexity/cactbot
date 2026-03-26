@@ -1,14 +1,14 @@
 {
   "name": "cactbot",
-  "version": "0.36.1",
-  "releaseSummary": "Doomtrain EX, M9N, M11N, M12N, Tsukuyomi Unreal, Mistwake, i18n",
-  "releaseInDraft": "true",
+  "version": "0.36.6",
+  "releaseSummary": "more m9s, m10s, m11s; initial m12s; i18n",
+  "releaseInDraft": "false",
   "license": "Apache-2.0",
   "type": "module",
   "types": "./types",
   "repository": {
     "type": "git",
-    "url": "https://github.com/OverlayPlugin/cactbot"
+    "url": "git+https://github.com/OverlayPlugin/cactbot.git"
   },
   "files": [
     "./ui",

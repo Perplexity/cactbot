@@ -153,7 +153,10 @@ const triggerSet: TriggerSet<Data> = {
       outputStrings: {
         text: {
           en: '${mech} + Avoid Lasers',
+          de: '${mech} + vermeide Laser',
+          fr: '${mech} + éviter lasers',
           cn: '${mech} + 躲避激光',
+          ko: '${mech} + 레이저 피하기',
         },
         knockback: Outputs.knockback,
       },
@@ -171,6 +174,10 @@ const triggerSet: TriggerSet<Data> = {
       outputStrings: {
         text: {
           en: '${mech} => ${away}',
+          de: '${mech} => ${away}',
+          fr: '${mech} => ${away}',
+          cn: '${mech} => ${away}',
+          ko: '${mech} => ${away}',
         },
         drawIn: Outputs.drawIn,
         away: Outputs.awayFromFront,
@@ -195,7 +202,10 @@ const triggerSet: TriggerSet<Data> = {
       outputStrings: {
         avoid: {
           en: 'Avoid ${dir} turrets',
+          de: 'Vermeide ${dir} Geschütztürme',
+          fr: 'Évitez les tourelles ${dir}',
           cn: '躲避 ${dir} 炮塔',
+          ko: '${dir} 포탑 피하기',
         },
         east: Outputs.east,
         west: Outputs.west,
@@ -250,7 +260,10 @@ const triggerSet: TriggerSet<Data> = {
         ...Directions.outputStrings16Dir,
         text: {
           en: 'Tank cleave on YOU from ${dir}',
+          de: 'Tank Cleave auf DIR von ${dir}',
+          fr: 'Tank cleave sur vous depuis ${dir}',
           cn: '${dir} 坦克死刑',
+          ko: '광역 탱버 대상자 ${dir} 방향',
         },
       },
     },
@@ -264,7 +277,9 @@ const triggerSet: TriggerSet<Data> = {
         text: {
           en: 'Tower x3 => Next Platform',
           de: 'Turm x3 => Nächste Plattform',
+          fr: 'Tour x3 => Prochain wagon',
           cn: '踩塔 x3 => 下一节车厢',
+          ko: '탑 x3 => 다음 플랫폼',
         },
       },
     },
@@ -277,7 +292,10 @@ const triggerSet: TriggerSet<Data> = {
       outputStrings: {
         text: {
           en: 'Down',
+          de: 'Unten',
+          fr: 'Bas',
           cn: '下',
+          ko: '아래',
         },
       },
     },
@@ -290,7 +308,10 @@ const triggerSet: TriggerSet<Data> = {
       outputStrings: {
         text: {
           en: 'Up',
+          de: 'Oben',
+          fr: 'Haut',
           cn: '上',
+          ko: '위',
         },
       },
     },
@@ -309,8 +330,8 @@ const triggerSet: TriggerSet<Data> = {
       type: 'Ability',
       netRegex: { id: 'B258', capture: false },
       durationSeconds: 8,
-      countdownSeconds: 8,
       suppressSeconds: 9999,
+      countdownSeconds: 8,
       infoText: (_data, _matches, output) => output.south!(),
       outputStrings: {
         south: Outputs.south,
@@ -362,14 +383,14 @@ const triggerSet: TriggerSet<Data> = {
           return 10.5;
         return 13.5;
       },
-      countdownSeconds: (data) => {
+      suppressSeconds: (data) => {
         if (data.hailMoveCount === 2)
           return 7.5;
         if (data.hailMoveCount === 3)
           return 10.5;
         return 13.5;
       },
-      suppressSeconds: (data) => {
+      countdownSeconds: (data) => {
         if (data.hailMoveCount === 2)
           return 7.5;
         if (data.hailMoveCount === 3)
@@ -436,12 +457,116 @@ const triggerSet: TriggerSet<Data> = {
       outputStrings: {
         text: {
           en: 'Tower x3',
+          de: 'Turm x3',
+          fr: 'Tour x3',
           cn: '踩塔 x3',
+          ko: '탑 x3',
         },
       },
     },
   ],
   timelineReplace: [
+    {
+      'locale': 'de',
+      'replaceSync': {
+        'Aether': 'Äthersphäre',
+        'Doomtrain': 'Doomtrain',
+        'Ghost Train': 'Doomtrain-Schemen',
+        'Kinematic Turret': 'Eskortgeschütz',
+        'Levin Signal': 'Donnerhalo',
+      },
+      'replaceText': {
+        'Aether Surge': 'Ätherschwall',
+        'Aetherial Ray': 'Ätherstrahl',
+        'Arcane Revelation': 'Ätherausstoß',
+        'Battering Arms': 'Schmetterarm',
+        'Blastpipe': 'Nebelruß',
+        'Derail(?!ment)': 'Entgleisung',
+        'Derailment Siege': 'Schienenbruch',
+        'Electray': 'Elektroblitz',
+        'Hail of Thunder': 'Donnerhagel',
+        'Head-on Emission': 'Frontalannihilation',
+        'Headlight': 'Spitzensignal',
+        'Lightning Burst': 'Blitzknall',
+        'Lightning Express': 'InterBlitz-Express',
+        'Overdraught(?<! )': 'Überstrom',
+        'Plasma Beam': 'Plasmastrahl',
+        'Runaway Train': 'Endlose Irrfahrt',
+        'Shockwave': 'Schockwelle',
+        'Thunderous Breath': 'Gewitteratem',
+        'Turret Crossing': 'Kanonenkreuzung',
+        'Unlimited Express': 'Unregional-Express',
+        'Windpipe': 'Nebelsog',
+      },
+    },
+    {
+      'locale': 'fr',
+      'missingTranslations': true,
+      'replaceSync': {
+        'Aether': 'sphère éthérée',
+        'Doomtrain': 'Glasya-Labolas',
+        'Ghost Train': 'double de Glasya-Labolas',
+        'Kinematic Turret': 'tourelle d\'escorte',
+        'Levin Signal': 'halo électrique',
+      },
+      'replaceText': {
+        'Aether Surge': 'Déferlante éthérée',
+        'Aetherial Ray': 'Rayon éthéré',
+        'Arcane Revelation': 'Déploiement arcanique',
+        'Battering Arms': 'Raclée de bras',
+        'Blastpipe': 'Émission de brume',
+        'Derail(?!ment)': 'Déraillement',
+        'Derailment Siege': 'Déraillement violent',
+        'Electray': 'Rayon électrique',
+        'Hail of Thunder': 'Déluge électrique',
+        'Head-on Emission': 'Charge annihilante',
+        'Headlight': 'Regard glacial',
+        'Lightning Burst': 'Explosion électrique',
+        'Lightning Express': 'Express éclair',
+        'Overdraught(?<! )': 'Surcharge débordante',
+        'Plasma Beam': 'Rayon plasma',
+        'Runaway Train': 'Train fou',
+        'Shockwave': 'Onde de choc',
+        'Thunderous Breath': 'Souffle électrique',
+        'Turret Crossing': 'Tourelles croisées',
+        'Unlimited Express': 'Express illimité',
+        'Windpipe': 'Aspirateur de brume',
+      },
+    },
+    {
+      'locale': 'ja',
+      'missingTranslations': true,
+      'replaceSync': {
+        'Aether': 'エーテルスフィア',
+        'Doomtrain': 'グラシャラボラス',
+        'Ghost Train': 'グラシャラボラスの分体',
+        'Kinematic Turret': 'エスコートタレット',
+        'Levin Signal': '雷光輪',
+      },
+      'replaceText': {
+        'Aether Surge': 'エーテルサージ',
+        'Aetherial Ray': 'エーテルレイ',
+        'Arcane Revelation': '魔法陣展開',
+        'Battering Arms': 'バテリングアーム',
+        'Blastpipe': 'ミストエミッション',
+        'Derail(?!ment)': 'ディレール',
+        'Derailment Siege': 'ディレールパウンド',
+        'Electray': 'エレクトロレイ',
+        'Hail of Thunder': 'サンダーレイン',
+        'Head-on Emission': 'ヘッドオン・エリミネーション',
+        'Headlight': 'ヘッドライト',
+        'Lightning Burst': 'サンダーバースト',
+        'Lightning Express': 'ライトニングエクスプレス',
+        'Overdraught(?<! )': 'オーバーフロウ',
+        'Plasma Beam': 'プラズマレイ',
+        'Runaway Train': '果てしなき暴走',
+        'Shockwave': '衝撃波',
+        'Thunderous Breath': 'サンダーブレス',
+        'Turret Crossing': '随伴機出撃',
+        'Unlimited Express': 'アンリミテッドエクスプレス',
+        'Windpipe': 'ミストバキューム',
+      },
+    },
     {
       'locale': 'cn',
       'replaceSync': {
@@ -473,6 +598,39 @@ const triggerSet: TriggerSet<Data> = {
         'Unlimited Express': '无控急行',
         'Windpipe': '抽雾',
         'Head-on Emission': '前方排障',
+      },
+    },
+    {
+      'locale': 'ko',
+      'replaceSync': {
+        'Aether': '에테르 구체',
+        'Doomtrain': '글라시아 라볼라스',
+        'Ghost Train': '글라시아 라볼라스의 분신',
+        'Kinematic Turret': '경호 포탑',
+        'Levin Signal': '뇌광륜',
+      },
+      'replaceText': {
+        'Aetherial Ray': '에테르 광선',
+        'Aether Surge': '에테르 쇄도',
+        'Arcane Revelation': '마법진 전개',
+        'Battering Arms': '팔 난타',
+        'Blastpipe': '안개 배출',
+        'Derail(?!ment)': '탈선',
+        'Derailment Siege': '탈선 난동',
+        'Electray': '일렉트로레이',
+        'Hail of Thunder': '번개 비',
+        'Headlight': '전조등',
+        'Lightning Burst': '번개 작렬',
+        'Lightning Express': '번개 폭주열차',
+        '(?<! )Overdraught': '에테르 범람',
+        'Plasma Beam': '플라스마 광선',
+        'Runaway Train': '끝없는 폭주',
+        'Shockwave': '충격파',
+        'Thunderous Breath': '번개 숨결',
+        'Turret Crossing': '추종기 출격',
+        'Unlimited Express': '무한 폭주열차',
+        'Windpipe': '안개 흡입',
+        'Head-on Emission': '전방 제거',
       },
     },
   ],

@@ -631,6 +631,12 @@ const triggerSet: TriggerSet<Data> = {
            파트너 쉐어는 탱힐+딜러와 탱힐+딜러를 의미합니다(어떤 조합도 가능).
            원딜이 두 명 또는 근딜이 두 명일 경우, 이 설정 옵션과 상관없이 "근딜"을 호출하지 않습니다.
            탱힐 둘, 딜러 둘이 아닌 파티 구성은 지원되지 않습니다.`,
+        tc: `對於所有雙人分攤，該選項指定了選擇誰與誰分攤的優先級。
+           如果你想讓近戰優先和坦克分攤, 選擇含有“近戰”的選項。
+           近戰分攤指的是 近戰+坦克 和 治療+遠程。職能分攤指的是 坦克 + 治療 和 DPS + DPS。
+           搭檔分攤指的是 坦克 + DPS 和 治療 + DPS (任意組合均可)。
+           如果隊伍中有兩名遠程 DPS 或近戰 DPS, 無論此配置選項如何, 它都不會報“近戰分攤”。
+           沒有考慮對非標準陣容隊伍 (非1T1N2DPS) 構成的支持。`,
       },
       name: {
         en: 'Stack Selection Order',
@@ -666,6 +672,10 @@ const triggerSet: TriggerSet<Data> = {
         ko: {
           '근딜 > 역할군 > 파트너': 'meleeRolesPartners',
           '역할군 > 파트너': 'rolesPartners',
+        },
+        tc: {
+          '近戰 > 職能 > 搭檔': 'meleeRolesPartners',
+          '職能 > 搭檔': 'rolesPartners',
         },
       },
       default: 'meleeRolesPartners',
@@ -1184,7 +1194,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '北 + ${mechanic}',
           cn: '上菱形 + ${mechanic}',
           ko: '북쪽 + ${mechanic}',
-          tc: '上菱形 + ${mechanic}',
+          tc: '北菱形 + ${mechanic}',
         },
         east: {
           en: 'East Diamond + ${mechanic}',
@@ -1193,7 +1203,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '東 + ${mechanic}',
           cn: '右菱形 + ${mechanic}',
           ko: '동쪽 + ${mechanic}',
-          tc: '右菱形 + ${mechanic}',
+          tc: '東菱形 + ${mechanic}',
         },
         south: {
           en: 'South Diamond + ${mechanic}',
@@ -1202,7 +1212,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '南 + ${mechanic}',
           cn: '下菱形 + ${mechanic}',
           ko: '남쪽 + ${mechanic}',
-          tc: '下菱形 + ${mechanic}',
+          tc: '南菱形 + ${mechanic}',
         },
         west: {
           en: 'West Diamond + ${mechanic}',
@@ -1211,7 +1221,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '西 + ${mechanic}',
           cn: '左菱形 + ${mechanic}',
           ko: '서쪽 + ${mechanic}',
-          tc: '左菱形 + ${mechanic}',
+          tc: '西菱形 + ${mechanic}',
         },
         northeast: {
           en: 'Northeast Square + ${mechanic}',
@@ -1220,7 +1230,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '北東 + ${mechanic}',
           cn: '右上 正方形 + ${mechanic}',
           ko: '북동쪽 + ${mechanic}',
-          tc: '右上 正方形 + ${mechanic}',
+          tc: '東北 正方形 + ${mechanic}',
         },
         southeast: {
           en: 'Southeast Square + ${mechanic}',
@@ -1229,7 +1239,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '南東 + ${mechanic}',
           cn: '右下 正方形 + ${mechanic}',
           ko: '남동쪽 + ${mechanic}',
-          tc: '右下 正方形 + ${mechanic}',
+          tc: '東南 正方形 + ${mechanic}',
         },
         southwest: {
           en: 'Southwest Square + ${mechanic}',
@@ -1238,7 +1248,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '南西 + ${mechanic}',
           cn: '左下 正方形 + ${mechanic}',
           ko: '남서쪽 + ${mechanic}',
-          tc: '左下 正方形 + ${mechanic}',
+          tc: '西南 正方形 + ${mechanic}',
         },
         northwest: {
           en: 'Northwest Square + ${mechanic}',
@@ -1247,7 +1257,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '北西 + ${mechanic}',
           cn: '左上 正方形 + ${mechanic}',
           ko: '북서쪽 + ${mechanic}',
-          tc: '左上 正方形 + ${mechanic}',
+          tc: '西北 正方形 + ${mechanic}',
         },
         ...basicStackSpreadOutputStrings,
         unknownMech: Outputs.unknown,
@@ -1783,6 +1793,8 @@ const triggerSet: TriggerSet<Data> = {
              “半异色” 指的是有 2 人的 3 个 buff 有 2 种颜色, 另外 2 人的 3 个 buff 全部是同一种颜色。`,
         ko: `완전 혼합은 모든 사람이 두 가지 색을 가지고 있음을 의미합니다 (한 가지 색 두 개, 다른 색 하나).
              반혼합은 두 사람이 두 가지 종류를 가지고 있고, 다른 두 사람은 모두 같은 색을 가지고 있음을 의미합니다.`,
+        tc: `“全異色” 指的是所有人的 3 個 buff 都有 2 種顏色 (2 個是一種顏色, 剩下 1 個是另一種)。
+             “半異色” 指的是有 2 人的 3 個 buff 有 2 種顏色, 另外 2 人的 3 個 buff 全部是同一種顏色。`,
       },
       type: 'GainsEffect',
       netRegex: { effectId: ['E0D', 'E0E', 'E0F', 'E11', 'E12', 'E13'], capture: false },
@@ -2570,7 +2582,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '北・南',
           cn: '上/下',
           ko: '북쪽/남쪽',
-          tc: '上/下',
+          tc: '北/南',
         },
         eastWest: {
           en: 'East/West',
@@ -2579,7 +2591,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '東・西',
           cn: '左/右',
           ko: '동쪽/서쪽',
-          tc: '左/右',
+          tc: '東/西',
         },
       },
     },
@@ -3333,7 +3345,6 @@ const triggerSet: TriggerSet<Data> = {
     },
     {
       'locale': 'tc',
-      'missingTranslations': true,
       'replaceSync': {
         'Ashigaru Kyuhei': '足輕弓兵',
         'Ball of Levin': '閃電球',
@@ -3354,8 +3365,8 @@ const triggerSet: TriggerSet<Data> = {
         'The Trial Of Wisdom': '智德的試煉',
       },
       'replaceText': {
-        // '\\(circles\\)': '', // FIXME '(圆圈)'
-        // '\\(lines\\)': '', // FIXME '(直线)'
+        '\\(circles\\)': '(圓圈)',
+        '\\(lines\\)': '(直線)',
         'Azure Auspice': '青帝劍氣',
         'Boundless Azure': '青帝空閃刃',
         'Boundless Scarlet': '赤帝空閃刃',

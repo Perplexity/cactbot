@@ -745,6 +745,18 @@ class RaidbossConfigurator {
       triggerOptions.classList.add('trigger-file-options');
       triggerContainer.appendChild(triggerOptions);
 
+      // If this trigger set is overridden, show warning instead of triggers
+      if (info.triggerSet.overriddenByFile !== undefined) {
+        const warningDiv = document.createElement('div');
+        warningDiv.classList.add('trigger-set-override-warning');
+        const baseText = this.base.translate(kMiscTranslations.overriddenByFile);
+        const detailText = baseText.replace('${file}', info.triggerSet.overriddenByFile);
+        const warningText = this.base.translate(kMiscTranslations.warning);
+        warningDiv.innerHTML = `<strong>${warningText}</strong>: ${detailText}`;
+        triggerOptions.appendChild(warningDiv);
+        continue;
+      }
+
       for (const [trigId, trig] of Object.entries(info.triggers ?? {})) {
         // Don't construct triggers that won't show anything.
         let hasOutputFunc = false;
@@ -1528,6 +1540,12 @@ class RaidbossConfigurator {
     // id so that the ui can disable overriding information.
     const previousTriggerWithId: { [id: string]: ConfigLooseTrigger } = {};
 
+    // While walking through trigger sets, record any previous trigger sets with the same
+    // id so that the ui can show overriding information.
+    const previousTriggerSetWithId: {
+      [id: string]: { triggerSet: ConfigLooseTriggerSet; filename?: string };
+    } = {};
+
     for (const item of Object.values(map)) {
       // TODO: maybe each trigger set needs a zone name, and we should
       // use that instead of the filename???
@@ -1543,6 +1561,17 @@ class RaidbossConfigurator {
 
       if (!triggerSet.isUserTriggerSet && triggerSet.filename !== undefined)
         flattenTimeline(triggerSet, triggerSet.filename, timelineFiles);
+
+      // Track if this trigger set overrides any previous trigger set with the same id.
+      if (triggerSet.id !== undefined) {
+        const previous = previousTriggerSetWithId[triggerSet.id];
+        if (previous)
+          previous.triggerSet.overriddenByFile = triggerSet.filename;
+        previousTriggerSetWithId[triggerSet.id] = {
+          triggerSet: triggerSet,
+          filename: triggerSet.filename,
+        };
+      }
 
       item.triggers = {};
       for (const [key, triggerArr] of Object.entries(rawTriggers)) {
@@ -1916,6 +1945,13 @@ const defaultAlertOutput: ConfigEntry = {
       '🆙 텍스트만': 'textOnly',
       '❌ 비활성화': 'disabled',
     },
+    tc: {
+      '🆙🔊 文本顯示與提示音': 'textAndSound',
+      '🆙💬 文本顯示與TTS': 'ttsAndText',
+      '💬 只使用TTS': 'ttsOnly',
+      '🆙 只使用文本顯示': 'textOnly',
+      '❌ 禁用': 'disabled',
+    },
   },
   default: 'textAndSound',
   setterFunc: setOptionsFromOutputValue,
@@ -2016,6 +2052,17 @@ const templateOptions: OptionsTemplate = {
           'French (fr)': 'fr',
           'Japanese (ja)': 'ja',
           'Korean (ko)': 'ko',
+          'Traditional Chinese (tc)': 'tc',
+        },
+        de: {
+          'Anzeigesprache verwenden': 'default',
+          'Englisch (en)': 'en',
+          'Chinesisch (cn)': 'cn',
+          'Deutsch (de)': 'de',
+          'Französisch (fr)': 'fr',
+          'Japanisch (ja)': 'ja',
+          'Koreanisch (ko)': 'ko',
+          'Traditionelles Chinesisch (tc)': 'tc',
         },
         fr: {
           'Utiliser la langue d\'affichage': 'default',
@@ -2025,6 +2072,7 @@ const templateOptions: OptionsTemplate = {
           'Français (fr)': 'fr',
           'Japonais (ja)': 'ja',
           'Coréen (ko)': 'ko',
+          'Chinois traditionnel (tc)': 'tc',
         },
         ja: {
           '表示言語既定値': 'default',
@@ -2034,6 +2082,7 @@ const templateOptions: OptionsTemplate = {
           'フランス語 (fr)': 'fr',
           '日本語 (ja)': 'ja',
           '韓国語 (ko)': 'ko',
+          '繁体字中国語 (tc)': 'tc',
         },
         cn: {
           '使用显示语言': 'default',
@@ -2043,6 +2092,7 @@ const templateOptions: OptionsTemplate = {
           '法文 (fr)': 'fr',
           '日文 (ja)': 'ja',
           '韩文 (ko)': 'ko',
+          '繁体中文 (tc)': 'tc',
         },
         ko: {
           '주 사용 언어 사용': 'default',
@@ -2052,6 +2102,17 @@ const templateOptions: OptionsTemplate = {
           '프랑스어 (fr)': 'fr',
           '일본어 (ja)': 'ja',
           '한국어 (ko)': 'ko',
+          '중국어 번체 (tc)': 'tc',
+        },
+        tc: {
+          '使用顯示語言': 'default',
+          '英文 (en)': 'en',
+          '中文 (cn)': 'cn',
+          '德文 (de)': 'de',
+          '法文 (fr)': 'fr',
+          '日文 (ja)': 'ja',
+          '韓文 (ko)': 'ko',
+          '繁體中文 (tc)': 'tc',
         },
       },
       default: 'default',
@@ -2121,6 +2182,7 @@ const templateOptions: OptionsTemplate = {
           '法文 (fr)': 'fr',
           '日文 (ja)': 'ja',
           '韩文 (ko)': 'ko',
+          '繁体中文 (tc)': 'tc',
         },
         ko: {
           'FFXIV Plugin 언어 사용': 'default',
@@ -2130,6 +2192,16 @@ const templateOptions: OptionsTemplate = {
           '프랑스어 (fr)': 'fr',
           '일본어 (ja)': 'ja',
           '한국어 (ko)': 'ko',
+        },
+        tc: {
+          '使用最終幻想XIV解析插件設置的語言': 'default',
+          '英文 (en)': 'en',
+          '中文 (cn)': 'cn',
+          '德文 (de)': 'de',
+          '法文 (fr)': 'fr',
+          '日文 (ja)': 'ja',
+          '韓文 (ko)': 'ko',
+          '繁体中文 (tc)': 'tc',
         },
       },
       default: 'default',
@@ -2187,6 +2259,12 @@ const templateOptions: OptionsTemplate = {
         },
         ko: {
           '기본': 'default',
+          'lippe': 'lippe',
+          'jwidea': 'jwidea',
+          'dorgrin': 'dorgrin',
+        },
+        tc: {
+          '默認': 'default',
           'lippe': 'lippe',
           'jwidea': 'jwidea',
           'dorgrin': 'dorgrin',
@@ -2262,6 +2340,10 @@ const templateOptions: OptionsTemplate = {
              당신이 파티에 있지 않거나 파티 밖에 있는 플레이어에 대해서는
              기본값인 플레이어의 닉네임이 사용됩니다.
              (한국 서버에서 '이름 전체' 옵션은 '닉네임'과 같습니다.)`,
+        tc: `在觸發器輸出中指定玩家的默認方式。默認選項為輸出暱稱/名字。
+             使用此選項可將輸出方式更改為玩家的職能名或職業名。
+             若你不在小隊中或玩家離開小隊 (或出現錯誤時), 將默認輸出玩家暱稱。
+             (註：繁中服對於暱稱和全名不做區分)`,
       },
       name: {
         en: 'Default Player Label',
@@ -2315,6 +2397,13 @@ const templateOptions: OptionsTemplate = {
           '직업 (암기)': 'job',
           '직업 전체 (암흑기사)': 'jobFull',
           '이름 전체 (Tini Poutini)': 'name',
+        },
+        tc: {
+          '暱稱 (弗雷)': 'nick',
+          '職能 (坦克)': 'role',
+          '職業簡稱 (暗騎)': 'job',
+          '職業全稱 (暗黑騎士)': 'jobFull',
+          '全名 (弗雷)': 'name',
         },
       },
       default: 'nick',

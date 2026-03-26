@@ -225,6 +225,8 @@ const triggerSet: TriggerSet<Data> = {
           `以奈尔所在的塔为 1 号位时, 顺时针找塔。例如在 <a href="https://clees.me/guides/ucob/" target="_blank">Clees' guide</a> 中的 H1 是 7 号位。`,
         ko:
           `넬 밑의 기둥을 위치 1이라 했을 때, 시계 방향으로 세었을 때 당신의 위치. 즉, <a href="https://clees.me/guides/ucob/" target="_blank">Clees 가이드</a>에서 H1의 위치는 7.`,
+        tc:
+          `以奈爾所在的塔為 1 號位時, 順時針找塔. 例如在 <a href="https://clees.me/guides/ucob/" target="_blank">Clees' guide</a> 中的 H1 是 7 號位.`,
       },
       name: {
         en: 'P3 Heavensfall Tower Position',
@@ -279,6 +281,17 @@ const triggerSet: TriggerSet<Data> = {
           '위치 6': '5',
           '위치 7': '6',
           '위치 8': '7',
+        },
+        tc: {
+          '禁用塔播報': 'disabled',
+          '1號位': '0',
+          '2號位': '1',
+          '3號位': '2',
+          '4號位': '3',
+          '5號位': '4',
+          '6號位': '5',
+          '7號位': '6',
+          '8號位': '7',
         },
       },
       default: 'disabled',
@@ -496,7 +509,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '魔力爆散${players}',
           cn: '黑球点：${players}',
           ko: '마력연성: ${players}',
-          tc: '黑球點：${players}',
+          tc: '黑球點: ${players}',
         },
       },
     },
@@ -906,7 +919,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '自分に一番目死の宣告',
           cn: '死宣一号点名',
           ko: '죽음의 선고 1번',
-          tc: '死宣一號點名',
+          tc: '死宣#1 點名',
         },
         doom2: {
           en: 'Doom #2 on YOU',
@@ -915,7 +928,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '自分に二番目死の宣告',
           cn: '死宣二号点名',
           ko: '죽음의 선고 2번',
-          tc: '死宣二號點名',
+          tc: '死宣#2 點名',
         },
         doom3: {
           en: 'Doom #3 on YOU',
@@ -924,7 +937,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '自分に三番目死の宣告',
           cn: '死宣三号点名',
           ko: '죽음의 선고 3번',
-          tc: '死宣三號點名',
+          tc: '死宣#3 點名',
         },
         justNumber: {
           en: '${num}',
@@ -1096,7 +1109,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: 'ファイアボールは密着 (${players}は外へ)',
           cn: '人群火3 (${players}躲避)',
           ko: '불 같이맞기 (${players} 는 피하기)',
-          tc: '人群火3 (${players}躲避)',
+          tc: '人群火3 (${players} 躲避)',
         },
         fireInAvoid: {
           en: 'Fire IN: AVOID!',
@@ -1381,7 +1394,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: '${num}: ${player}',
           cn: '${num}：${player}',
           ko: '${num}: ${player}',
-          tc: '${num}：${player}',
+          tc: '${num}: ${player}',
         },
       },
     },
@@ -1873,7 +1886,7 @@ const triggerSet: TriggerSet<Data> = {
           ja: 'シェイカーない；頭割りで南',
           cn: '无点名，正下方分摊',
           ko: '징 없음, 모여서 쉐어',
-          tc: '無點名，正下方分攤',
+          tc: '無點名，南面分攤',
         },
         tenstrikeNotOnYou: {
           en: 'Stack on safe spot',
@@ -2081,7 +2094,7 @@ const triggerSet: TriggerSet<Data> = {
           fr: 'Brasiers ${dir1} -> ${dir2}',
           cn: '百京核爆 ${dir1} -> ${dir2}',
           ko: '엑사플레어 ${dir1} -> ${dir2}',
-          tc: '百京核爆 ${dir1} -> ${dir2}',
+          tc: '百京火光 ${dir1} -> ${dir2}',
         },
         tts: {
           en: 'Exaflares ${dir1} towards ${dir2}',
@@ -2089,7 +2102,7 @@ const triggerSet: TriggerSet<Data> = {
           fr: 'Brasiers ${dir1} vers ${dir2}',
           cn: '百京核爆 从 ${dir1} 到 ${dir2}',
           ko: '엑사플레어 ${dir1}에서 ${dir2}',
-          tc: '百京核爆 從 ${dir1} 到 ${dir2}',
+          tc: '百京火光 從 ${dir1} 到 ${dir2}',
         },
       },
     },
@@ -2432,7 +2445,6 @@ const triggerSet: TriggerSet<Data> = {
     },
     {
       'locale': 'tc',
-      'missingTranslations': true,
       'replaceSync': {
         'Bahamut Prime': '至尊巴哈姆特',
         'Fang Of Light': '光牙',
@@ -2446,10 +2458,10 @@ const triggerSet: TriggerSet<Data> = {
         'Twintania': '雙塔尼亞',
       },
       'replaceText': {
-        // '--push--': '', // FIXME '--开怪--'
+        '--push--': '--開怪--',
         'Aetheric Profusion': '乙太失控',
         'Akh Morn': '死亡輪迴',
-        // 'Bahamut Marker': '', // FIXME '巴哈标记'
+        'Bahamut Marker': '巴哈標記',
         'Bahamut\'s Claw': '巴哈姆特之爪',
         'Bahamut\'s Favor': '龍神的加護',
         'Blackfire Trio': '黑炎的三重奏',
@@ -2459,10 +2471,10 @@ const triggerSet: TriggerSet<Data> = {
         'Chain Lightning': '雷光鏈',
         'Dalamud Dive': '月華衝',
         'Death Sentence': '死刑',
-        // 'Dive . Dynamo/Chariot': '', // FIXME '冲 + 月环/钢铁'
-        // 'Dive Dynamo Combo': '', // FIXME '冲月环连招'
+        'Dive . Dynamo/Chariot': '衝 + 月環/鋼鐵',
+        'Dive Dynamo Combo': '衝月環連招',
         'Doom': '死亡風暴',
-        // 'Dynamo . Beam/Chariot': '', // FIXME '月环 + 光束/钢铁'
+        'Dynamo . Beam/Chariot': '月環 + 光束/鋼鐵',
         'Earth Shaker': '大地搖動',
         'Exaflare': '百京火光',
         'Fellruin Trio': '災厄的三重奏',
@@ -2480,32 +2492,32 @@ const triggerSet: TriggerSet<Data> = {
         'Liquid Hell': '液體地獄',
         'Lunar Dive': '月流衝',
         'Lunar Dynamo': '月流電圈',
-        // '(?<! )Marker(?!\\w)': '', // FIXME '标记'
+        '(?<! )Marker(?!\\w)': '標記',
         'Megaflare(?! Dive)': '百萬火光',
         'Megaflare Dive': '百萬火光衝',
         'Meteor Stream': '隕石流',
-        // 'Meteor/Dive or Dive/Beam': '', // FIXME '陨石/冲 或 冲/光束'
+        'Meteor/Dive or Dive/Beam': '隕石/衝 or 衝/光束',
         'Morn Afah': '無盡頓悟',
-        // 'Nael Marker': '', // FIXME '奈尔标记'
+        'Nael Marker': '奈爾標記',
         'Pepperoni': '百萬火光',
         'Plummet(?!\/)': '垂直下落',
         'Quickmarch Trio': '進軍的三重奏',
-        // 'Random Combo Attack': '', // FIXME '随机连招'
-        // 'Raven(\'s)? Dive': '', // FIXME '凶鸟冲'
+        'Random Combo Attack': '隨機連招',
+        'Raven(\'s)? Dive': '凶鳥衝',
         '(?<!\/)Ravensbeak': '凶鳥尖喙',
         'Seventh Umbral Era': '第七靈災',
-        'Spread': '百萬火光',
-        'Stack': '百萬火光',
-        // 'Targeted Fire': '', // FIXME '火球点名'
+        'Spread': '分散',
+        'Stack': '集合',
+        'Targeted Fire': '火球點名',
         'Tempest Wing': '風暴之翼',
         'Tenstrike Trio': '連擊的三重奏',
         'Teraflare': '億萬火光',
-        // 'Thermionic . Dynamo/Chariot': '', // FIXME '离子 + 月环/钢铁'
+        'Thermionic . Dynamo/Chariot': '離子 + 月環/鋼鐵',
         'Thermionic Beam': '熱離子光束',
         'Thermionic Burst': '熱離子爆發',
         'Towers': '百萬火光',
-        // 'Triple Nael Quote': '', // FIXME '奈尔台词三连'
-        // 'Twin Marker': '', // FIXME '双塔标记'
+        'Triple Nael Quote': '奈爾台詞三連',
+        'Twin Marker': '雙塔標記',
         'Twister': '旋風',
         'Twisting Dive': '旋風衝',
         'Wings Of Salvation': '救世之翼',
