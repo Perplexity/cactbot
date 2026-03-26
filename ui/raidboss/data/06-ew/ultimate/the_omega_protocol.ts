@@ -1890,15 +1890,15 @@ const triggerSet: TriggerSet<Data> = {
         const nothingPositions: Record<'east' | 'west', { [num: number]: string }> = {
           east: {
             1: 'A',
-            2: 'North of D',
-            3: 'South of D',
+            2: 'Above D',
+            3: 'Below D',
             4: 'Next to 3',
             5: 'C',
           },
           west: {
             1: 'A',
-            2: 'North of B',
-            3: 'South of B',
+            2: 'Above B',
+            3: 'Below B',
             4: 'Next to 2',
             5: 'C',
           },
@@ -1906,12 +1906,12 @@ const triggerSet: TriggerSet<Data> = {
 
         const monitorPositions: Record<'east' | 'west', { [num: number]: string }> = {
           east: {
-            1: 'North of 4',
+            1: 'Above 4',
             2: 'Below 1',
             3: 'Above 2',
           },
           west: {
-            1: 'North of 2',
+            1: 'Above 2',
             2: 'Below 4',
             3: 'Above 3',
           },
@@ -1959,7 +1959,7 @@ const triggerSet: TriggerSet<Data> = {
       id: 'TOP Wave Cannon Stack Collector',
       type: 'Ability',
       netRegex: { id: '5779', source: 'Omega' },
-      // Store full matches here in case somebody has a N/S priority system
+      // Store full matches here in case somebody has a N/S p riority system
       // they want to implement themselves in the stack trigger.
       run: (data, matches) => data.waveCannonStacks.push(matches),
     },
@@ -2095,7 +2095,26 @@ const triggerSet: TriggerSet<Data> = {
           data.trioDebuff[matches.target] = 'distant';
       },
       suppressSeconds: 5,
-      infoText: (data, _matches, output) => {
+      response: (data, _matches, output) => {
+        // cactbot-builtin-response
+        output.responseOutputStrings = {
+          blueNoDebuff: {
+            en: 'Stack SE/SW Marker AWAY from Omega',
+          },
+          blueDistant: {
+            en: 'Go South',
+          },
+          blueNear: {
+            en: 'Mid, Close To Cleave',
+          },
+          greenInner: {
+            en: 'Inner: Snap, stand N&S of SE/SW marker CLOSE to Omega',
+          },
+          greenOuter: {
+            en: 'Outer: Stretch, late snap',
+          },
+        };
+
         const myColor = data.deltaTethers[data.me];
         if (myColor === undefined)
           return;
@@ -2104,29 +2123,18 @@ const triggerSet: TriggerSet<Data> = {
 
         if (myColor === 'blue') {
           if (myDebuff === 'distant')
-            return output.blueDistant!();
+            return { infoText: output.blueDistant!() };
           if (myDebuff === 'near')
-            return output.blueNear!();
+            return { infoText: output.blueNear!() };
           // No debuff
-          return output.blueNoDebuff!();
+          return { infoText: output.blueNoDebuff!() };
         }
 
-        // Green tether
-        return output.green!();
-      },
-      outputStrings: {
-        blueNoDebuff: {
-          en: 'Stack SE/SW Marker AWAY from Omega',
-        },
-        blueDistant: {
-          en: 'Go South',
-        },
-        blueNear: {
-          en: 'Mid, Close To Cleave',
-        },
-        green: {
-          en: 'Inner: Snap, stand N&S of SE/SW marker CLOSE to Omega || Outer: Stretch, late snap',
-        },
+        // Green tether - two separate callouts
+        return {
+          infoText: output.greenInner!(),
+          alertText: output.greenOuter!(),
+        };
       },
     },
     {
@@ -2149,9 +2157,11 @@ const triggerSet: TriggerSet<Data> = {
           blueNear: {
             en: 'Mid, Close To Cleave',
           },
-          green: {
-            en:
-              'Inner: Snap, stand N&S of SE/SW marker CLOSE to Omega || Outer: Stretch, late snap',
+          greenInner: {
+            en: 'Inner: Snap, stand N&S of SE/SW marker CLOSE to Omega',
+          },
+          greenOuter: {
+            en: 'Outer: Stretch, late snap',
           },
         };
 
@@ -2170,8 +2180,11 @@ const triggerSet: TriggerSet<Data> = {
           return { alertText: output.blueNoDebuff!() };
         }
 
-        // Green tether
-        return { alertText: output.green!() };
+        // Green tether - two separate callouts
+        return {
+          infoText: output.greenInner!(),
+          alertText: output.greenOuter!(),
+        };
       },
     },
     {
